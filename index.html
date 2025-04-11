@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GymPT - Your AI Gym Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #9dc2ff;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='192' height='192' viewBox='0 0 192 192'%3E%3Cpath fill='%233b82f6' fill-opacity='0.4' d='M192 15v2a11 11 0 0 0-11 11c0 1.94 1.16 4.75 2.53 6.11l2.36 2.36a6.93 6.93 0 0 1 1.22 7.56l-.43.84a8.08 8.08 0 0 1-6.66 4.13H145v35.02a6.1 6.1 0 0 0 3.03 4.87l.84.43c1.58.79 4 .4 5.24-.85l2.36-2.36a12.04 12.04 0 0 1 7.51-3.11 13 13 0 1 1 .02 26 12 12 0 0 1-7.53-3.11l-2.36-2.36a4.93 4.93 0 0 0-5.24-.85l-.84.43a6.1 6.1 0 0 0-3.03 4.87V143h35.02a8.08 8.08 0 0 1 6.66 4.13l.43.84a6.91 6.91 0 0 1-1.22 7.56l-2.36 2.36A10.06 10.06 0 0 0 181 164a11 11 0 0 0 11 11v2a13 13 0 0 1-13-13 12 12 0 0 1 3.11-7.53l2.36-2.36a4.93 4.93 0 0 0 .85-5.24l-.43-.84a6.1 6.1 0 0 0-4.87-3.03H145v35.02a8.08 8.08 0 0 1-4.13 6.66l-.84.43a6.91 6.91 0 0 1-7.56-1.22l-2.36-2.36A10.06 10.06 0 0 0 124 181a11 11 0 0 0-11 11h-2a13 13 0 0 1 13-13c2.47 0 5.79 1.37 7.53 3.11l2.36 2.36a4.94 4.94 0 0 0 5.24.85l.84-.43a6.1 6.1 0 0 0 3.03-4.87V145h-35.02a8.08 8.08 0 0 1-6.66-4.13l-.43-.84a6.91 6.91 0 0 1 1.22-7.56l2.36-2.36A10.06 10.06 0 0 0 107 124a11 11 0 0 0-22 0c0 1.94 1.16 4.75 2.53 6.11l2.36 2.36a6.93 6.93 0 0 1 1.22 7.56l-.43.84a8.08 8.08 0 0 1-6.66 4.13H49v35.02a6.1 6.1 0 0 0 3.03 4.87l.84.43c1.58.79 4 .4 5.24-.85l2.36-2.36a12.04 12.04 0 0 1 7.51-3.11A13 13 0 0 1 81 192h-2a11 11 0 0 0-11-11c-1.94 0-4.75 1.16-6.11 2.53l-2.36 2.36a6.93 6.93 0 0 1-7.56 1.22l-.84-.43a8.08 8.08 0 0 1-4.13-6.66V145H11.98a6.1 6.1 0 0 0-4.87 3.03l-.43.84c-.79 1.58-.4 4 .85 5.24l2.36 2.36a12.04 12.04 0 0 1 3.11 7.51A13 13 0 0 1 0 177v-2a11 11 0 0 0 11-11c0-1.94-1.16-4.75-2.53-6.11l-2.36-2.36a6.93 6.93 0 0 1-1.22-7.56l.43-.84a8.08 8.08 0 0 1 6.66-4.13H47v-35.02a6.1 6.1 0 0 0-3.03-4.87l-.84-.43c-1.59-.8-4-.4-5.24.85l-2.36 2.36A12 12 0 0 1 28 109a13 13 0 1 1 0-26c2.47 0 5.79 1.37 7.53 3.11l2.36 2.36a4.94 4.94 0 0 0 5.24.85l.84-.43A6.1 6.1 0 0 0 47 84.02V49H11.98a8.08 8.08 0 0 1-6.66-4.13l-.43-.84a6.91 6.91 0 0 1 1.22-7.56l2.36-2.36A10.06 10.06 0 0 0 11 28 11 11 0 0 0 0 17v-2a13 13 0 0 1 13 13c0 2.47-1.37 5.79-3.11 7.53l-2.36 2.36a4.94 4.94 0 0 0-.85 5.24l.43.84A6.1 6.1 0 0 0 11.98 47H47V11.98a8.08 8.08 0 0 1 4.13-6.66l.84-.43a6.91 6.91 0 0 1 7.56 1.22l2.36 2.36A10.06 10.06 0 0 0 68 11 11 11 0 0 0 79 0h2a13 13 0 0 1-13 13 12 12 0 0 1-7.53-3.11l-2.36-2.36a4.93 4.93 0 0 0-5.24-.85l-.84.43A6.1 6.1 0 0 0 49 11.98V47h35.02a8.08 8.08 0 0 1 6.66 4.13l.43.84a6.91 6.91 0 0 1-1.22 7.56l-2.36 2.36A10.06 10.06 0 0 0 85 68a11 11 0 0 0 22 0c0-1.94-1.16-4.75-2.53-6.11l-2.36-2.36a6.93 6.93 0 0 1-1.22-7.56l.43-.84a8.08 8.08 0 0 1 6.66-4.13H143V11.98a6.1 6.1 0 0 0-3.03-4.87l-.84-.43c-1.59-.8-4-.4-5.24.85l-2.36 2.36A12 12 0 0 1 124 13a13 13 0 0 1-13-13h2a11 11 0 0 0 11 11c1.94 0 4.75-1.16 6.11-2.53l2.36-2.36a6.93 6.93 0 0 1 7.56-1.22l.84.43a8.08 8.08 0 0 1 4.13 6.66V47h35.02a6.1 6.1 0 0 0 4.87-3.03l.43-.84c.8-1.59.4-4-.85-5.24l-2.36-2.36A12 12 0 0 1 179 28a13 13 0 0 1 13-13zM84.02 143a6.1 6.1 0 0 0 4.87-3.03l.43-.84c.8-1.59.4-4-.85-5.24l-2.36-2.36A12 12 0 0 1 83 124a13 13 0 1 1 26 0c0 2.47-1.37 5.79-3.11 7.53l-2.36 2.36a4.94 4.94 0 0 0-.85 5.24l.43.84a6.1 6.1 0 0 0 4.87 3.03H143v-35.02a8.08 8.08 0 0 1 4.13-6.66l.84-.43a6.91 6.91 0 0 1 7.56 1.22l2.36 2.36A10.06 10.06 0 0 0 164 107a11 11 0 0 0 0-22c-1.94 0-4.75 1.16-6.11 2.53l-2.36 2.36a6.93 6.93 0 0 1-7.56 1.22l-.84-.43a8.08 8.08 0 0 1-4.13-6.66V49h-35.02a6.1 6.1 0 0 0-4.87 3.03l-.43.84c-.79 1.58-.4 4 .85 5.24l2.36 2.36a12.04 12.04 0 0 1 3.11 7.51A13 13 0 1 1 83 68a12 12 0 0 1 3.11-7.53l2.36-2.36a4.93 4.93 0 0 0 .85-5.24l-.43-.84A6.1 6.1 0 0 0 84.02 49H49v35.02a8.08 8.08 0 0 1-4.13 6.66l-.84.43a6.91 6.91 0 0 1-7.56-1.22l-2.36-2.36A10.06 10.06 0 0 0 28 85a11 11 0 0 0 0 22c1.94 0 4.75-1.16 6.11-2.53l2.36-2.36a6.93 6.93 0 0 1 7.56-1.22l.84.43a8.08 8.08 0 0 1 4.13 6.66V143h35.02z'%3E%3C/path%3E%3C/svg%3E");
+      }
+
+      .chat-container {
+        height: calc(100vh - 200px);
+      }
+
+      .message {
+        max-width: 80%;
+      }
+
+      .user-message {
+        background-color: #3b82f6;
+        color: white;
+        border-radius: 1rem 1rem 0 1rem;
+      }
+
+      .bot-message {
+        background-color: #e2e8f0;
+        color: #1e293b;
+        border-radius: 1rem 1rem 1rem 0;
+      }
+
+      .typing-indicator span {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: #64748b;
+        margin: 0 2px;
+      }
+
+      .typing-indicator span:nth-child(1) {
+        animation: bounce 1s infinite;
+      }
+
+      .typing-indicator span:nth-child(2) {
+        animation: bounce 1s infinite 0.2s;
+      }
+
+      .typing-indicator span:nth-child(3) {
+        animation: bounce 1s infinite 0.4s;
+      }
+
+      @keyframes bounce {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-5px);
+        }
+      }
+
+      .gradient-bg {
+        background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+      }
+    </style>
+  </head>
+  <body class="min-h-screen">
+    <!-- Header -->
+    <header class="gradient-bg text-white shadow-lg">
+      <div class="container mx-auto px-4 py-6">
+        <div class="flex justify-between items-center">
+          <div class="flex items-center space-x-2">
+            <i class="fas fa-dumbbell text-2xl"></i>
+            <h1 class="text-2xl font-bold">GymPT</h1>
+          </div>
+          <nav class="hidden md:flex space-x-6">
+            <a href="index.html" class="hover:text-blue-200 transition">Home</a>
+            <a href="workout.html" class="hover:text-blue-200 transition"
+              >Workouts</a
+            >
+            <a href="nutrition.html" class="hover:text-blue-200 transition"
+              >Nutrition</a
+            >
+            <a href="about.html" class="hover:text-blue-200 transition"
+              >About</a
+            >
+          </nav>
+          <button class="md:hidden">
+            <i class="fas fa-bars text-xl"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-12">
+      <div class="container mx-auto px-4">
+        <div class="max-w-3xl mx-auto text-center">
+          <h2 class="text-4xl font-bold mb-4">Your AI-Powered Gym Assistant</h2>
+          <p class="text-xl mb-8">
+            Get personalized workout advice, nutrition tips, and fitness
+            guidance anytime, anywhere.
+          </p>
+          <button
+            class="bg-white text-blue-600 font-semibold px-6 py-3 rounded-full hover:bg-blue-50 transition"
+          >
+            <a href="#chat">Start Chatting Now</a>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+      <div class="flex flex-col lg:flex-col gap-8">
+        <!-- Chatbot Section -->
+        <div class="lg:w-3/3 bg-white rounded-xl shadow-lg overflow-hidden">
+          <div class="p-4 border-b border-gray-200 bg-gray-50">
+            <div class="flex items-center space-x-3">
+              <div
+                class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center"
+              >
+                <i class="fas fa-robot text-blue-600"></i>
+              </div>
+              <div>
+                <h3 class="font-semibold" id="chat">GymPT Assistant</h3>
+                <p class="text-xs text-gray-500">Online</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="chat-container p-4 overflow-y-auto" id="chat-container">
+            <div class="mb-4 flex justify-start">
+              <div class="message bot-message p-4">
+                <p>
+                  Hi there! 👋 I'm GymPT, your AI fitness assistant. How can I
+                  help you today? You can ask me about:
+                </p>
+                <ul class="list-disc pl-5 mt-2 space-y-1">
+                  <li>Workout routines</li>
+                  <li>Exercise techniques</li>
+                  <li>Nutrition advice</li>
+                  <li>Progress tracking</li>
+                  <li>And anything fitness-related!</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-4 border-t border-gray-200 bg-gray-50">
+            <form id="chat-form" class="flex space-x-2">
+              <input
+                type="text"
+                id="user-input"
+                placeholder="Ask me anything about fitness..."
+                class="flex-1 px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                autocomplete="off"
+              />
+              <button
+                type="submit"
+                class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 transition"
+              >
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="flex flex-row gap-8 lg:flex row space-y-6">
+          <!-- Feature boxes unchanged -->
+          <div class="bg-white p-6 rounded-xl shadow">
+            <div class="flex items-center space-x-3 mb-4">
+              <div
+                class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center"
+              >
+                <i class="fas fa-dumbbell text-blue-600"></i>
+              </div>
+              <h3 class="font-semibold text-lg">Personalized Workouts</h3>
+            </div>
+            <p class="text-gray-600">
+              Get customized workout plans based on your goals, fitness level,
+              and available equipment.
+            </p>
+          </div>
+
+          <div class="bg-white p-6 rounded-xl shadow">
+            <div class="flex items-center space-x-3 mb-4">
+              <div
+                class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center"
+              >
+                <i class="fas fa-utensils text-green-600"></i>
+              </div>
+              <h3 class="font-semibold text-lg">Nutrition Guidance</h3>
+            </div>
+            <p class="text-gray-600">
+              Receive meal plans and nutrition advice tailored to your dietary
+              preferences and fitness objectives.
+            </p>
+          </div>
+
+          <div class="bg-white p-6 rounded-xl shadow">
+            <div class="flex items-center space-x-3 mb-4">
+              <div
+                class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center"
+              >
+                <i class="fas fa-chart-line text-purple-600"></i>
+              </div>
+              <h3 class="font-semibold text-lg">Progress Tracking</h3>
+            </div>
+            <p class="text-gray-600">
+              Monitor your fitness journey with detailed analytics and
+              personalized recommendations.
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-8">
+      <div class="container mx-auto px-4">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+          <div class="mb-4 md:mb-0">
+            <div class="flex items-center space-x-2">
+              <i class="fas fa-dumbbell text-2xl"></i>
+              <h2 class="text-xl font-bold">GymPT</h2>
+            </div>
+            <p class="text-gray-400 mt-2">Your AI fitness companion</p>
+          </div>
+          <div class="flex space-x-6">
+            <a href="#" class="hover:text-blue-400 transition"
+              ><i class="fab fa-twitter"></i
+            ></a>
+            <a href="#" class="hover:text-blue-400 transition"
+              ><i class="fab fa-instagram"></i
+            ></a>
+            <a href="#" class="hover:text-blue-400 transition"
+              ><i class="fab fa-facebook"></i
+            ></a>
+            <a href="#" class="hover:text-blue-400 transition"
+              ><i class="fab fa-youtube"></i
+            ></a>
+          </div>
+        </div>
+        <div
+          class="border-t border-gray-800 mt-6 pt-6 text-center text-gray-400 text-sm"
+        >
+          <p>© 2025 GymPT. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const chatForm = document.getElementById("chat-form");
+        const userInput = document.getElementById("user-input");
+        const chatContainer = document.getElementById("chat-container");
+
+        // Sample workout suggestions
+        const workoutSuggestions = [
+          "Create a 30-minute full body workout",
+          "Best exercises for building chest muscles",
+          "How can I improve my squat form?",
+          "Suggest a beginner-friendly yoga routine",
+        ];
+
+        // Display sample questions
+        function displaySampleQuestions() {
+          const sampleContainer = document.createElement("div");
+          sampleContainer.className = "mt-4";
+
+          workoutSuggestions.forEach((suggestion) => {
+            const button = document.createElement("button");
+            button.className =
+              "block w-full text-left px-4 py-2 mb-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm transition";
+            button.textContent = suggestion;
+            button.addEventListener("click", () => {
+              userInput.value = suggestion;
+              chatForm.dispatchEvent(new Event("submit"));
+            });
+            sampleContainer.appendChild(button);
+          });
+
+          const botMessage = document.createElement("div");
+          botMessage.className = "mb-4 flex justify-start";
+          botMessage.innerHTML = `
+                    <div class="message bot-message p-4">
+                        <p>Try asking me:</p>
+                        ${sampleContainer.outerHTML}
+                    </div>
+                `;
+
+          chatContainer.appendChild(botMessage);
+          chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        // Display typing indicator
+        function showTypingIndicator() {
+          const typingDiv = document.createElement("div");
+          typingDiv.className = "mb-4 flex justify-start";
+          typingDiv.innerHTML = `
+                    <div class="message bot-message p-4">
+                        <div class="typing-indicator">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                `;
+          chatContainer.appendChild(typingDiv);
+          chatContainer.scrollTop = chatContainer.scrollHeight;
+          return typingDiv;
+        }
+
+        // Remove typing indicator
+        function removeTypingIndicator(typingDiv) {
+          if (typingDiv && typingDiv.parentNode) {
+            typingDiv.parentNode.removeChild(typingDiv);
+          }
+        }
+
+        // Add message to chat
+        function addMessage(content, isUser) {
+          const messageDiv = document.createElement("div");
+          messageDiv.className = `mb-4 flex ${
+            isUser ? "justify-end" : "justify-start"
+          }`;
+
+          const messageContent = document.createElement("div");
+          messageContent.className = `message ${
+            isUser ? "user-message" : "bot-message"
+          } p-4`;
+
+          if (typeof content === "string") {
+            messageContent.innerHTML = marked.parse(content);
+          } else {
+            messageContent.appendChild(content);
+          }
+
+          messageDiv.appendChild(messageContent);
+          chatContainer.appendChild(messageDiv);
+          chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        // Function to send message to API
+        async function sendMessage(message) {
+          try {
+            const response = await fetch("/api/chat", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ message }),
+            });
+
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+
+            const data = await response.json();
+            return data.text;
+          } catch (error) {
+            console.error("Error sending message:", error);
+            throw error;
+          }
+        }
+
+        chatForm.addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const message = userInput.value.trim();
+
+          if (message === "") return;
+
+          // Add user message
+          addMessage(message, true);
+          userInput.value = "";
+
+          // Show typing indicator
+          const typingIndicator = showTypingIndicator();
+
+          try {
+            const response = await sendMessage(message);
+
+            removeTypingIndicator(typingIndicator);
+            addMessage(response, false);
+          } catch (error) {
+            removeTypingIndicator(typingIndicator);
+            addMessage(
+              "Sorry, I encountered an error processing your request. Please try again later.",
+              false
+            );
+            console.error("Error:", error);
+          }
+        });
+
+        // Initialize the chat with sample questions
+        displaySampleQuestions();
+      });
+    </script>
+  </body>
+</html>
