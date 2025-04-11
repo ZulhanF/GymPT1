@@ -1,8 +1,7 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 // Get API key from environment variable
-const genAI = new GoogleGenerativeAI("AIzaSyAOaM4w4LCzGELsLO4Vh4nXIs0HhoEQMLw");
-
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY);
 exports.handler = async function(event, context) {
   // Enable CORS
   const headers = {
